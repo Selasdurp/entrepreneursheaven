@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+
+# Stuur /api/* aanvragen door naar de serverless functie
+[[redirects]]
+  from = "/api/chat"
+  to = "/.netlify/functions/chat"
+  status = 200
