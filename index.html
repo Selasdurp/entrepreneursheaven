@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>entrepreneursheaven.ai</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    /* ─── Tokens ─────────────────────────────────────────────────── */
+    :root {
+        --bg:           #fafafe;
+        --bg-card:      rgba(255,255,255,0.75);
+        --bg-input:     rgba(255,255,255,0.9);
+        --bg-transcript:rgba(248,248,252,0.8);
+        --text-1:       #0f0f1a;
+        --text-2:       #5a5a7a;
+        --text-3:       #a0a0c0;
+        --border:       rgba(100,80,220,0.10);
+        --border-input: rgba(100,80,220,0.18);
+        --shadow-card:  0 4px 32px rgba(80,60,200,0.08), 0 1px 4px rgba(0,0,0,0.04);
+        --accent:       #5b4ef8;
+        --accent-2:     #a78bfa;
+        --accent-glow:  rgba(91,78,248,0.22);
+        --danger:       #f04040;
+        --success:      #22c55e;
+        --header-bg:    rgba(250,250,254,0.82);
+        --toggle-knob:  #fff;
+        --placeholder:  #c0c0d8;
+        --orb-opacity:  0.32;
+        --t:            0.38s cubic-bezier(.4,0,.2,1);
+    }
+    [data-theme="dark"] {
+        --bg:           #07070f;
+        --bg-card:      rgba(18,18,30,0.80);
+        --bg-input:     rgba(255,255,255,0.06);
+        --bg-transcript:rgba(255,255,255,0.03);
+        --text-1:       #f0f0fa;
+        --text-2:       rgba(220,220,255,0.65);
+        --text-3:       rgba(200,200,255,0.32);
+        --border:       rgba(160,140,255,0.12);
+        --border-input: rgba(160,140,255,0.18);
+        --shadow-card:  0 4px 40px rgba(0,0,0,0.55);
+        --accent:       #8b7eff;
+        --accent-2:     #c4b5fd;
+        --accent-glow:  rgba(139,126,255,0.28);
+        --danger:       #ff5555;
+        --success:      #34d399;
+        --header-bg:    rgba(7,7,15,0.80);
+        --toggle-knob:  #1a1a2e;
+        --placeholder:  rgba(200,200,255,0.22);
+        --orb-opacity:  0.18;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Inter', -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text-1);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        transition: background var(--t), color var(--t);
+        overflow-x: hidden;
+    }
+
+    /* ─── Background orbs ────────────────────────────────────────── */
+    .bg-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        opacity: var(--orb-opacity);
+    }
+    .orb-1 {
+        width: 700px; height: 700px;
+        background: radial-gradient(circle, #a78bfa 0%, transparent 70%);
+        top: -280px; left: -220px;
+        animation: orbDrift 22s ease-in-out infinite;
+    }
+    .orb-2 {
+        width: 560px; height: 560px;
+        background: radial-gradient(circle, #60a5fa 0%, transparent 70%);
+        top: -80px; right: -180px;
+        animation: orbDrift 26s ease-in-out infinite reverse;
+        animation-delay: -8s;
+    }
+    .orb-3 {
+        width: 480px; height: 480px;
+        background: radial-gradient(circle, #34d399 0%, transparent 70%);
+        bottom: -100px; left: 40%;
+        animation: orbDrift 30s ease-in-out infinite;
+        animation-delay: -15s;
+    }
+    [data-theme="dark"] .orb-1 { background: radial-gradient(circle, #7c3aed 0%, transparent 70%); }
+    [data-theme="dark"] .orb-2 { background: radial-gradient(circle, #2563eb 0%, transparent 70%); }
+    [data-theme="dark"] .orb-3 { background: radial-gradient(circle, #059669 0%, transparent 70%); }
+
+    @keyframes orbDrift {
+        0%,100% { transform: translate(0,0) scale(1); }
+        33%      { transform: translate(40px,-25px) scale(1.06); }
+        66%      { transform: translate(-25px,20px) scale(0.96); }
+    }
+
+    /* ─── Header ─────────────────────────────────────────────────── */
+    header {
+        position: sticky; top: 0; z-index: 100;
+        background: var(--header-bg);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(28px) saturate(200%);
+        -webkit-backdrop-filter: blur(28px) saturate(200%);
+        height: 60px;
+        padding: 0 2rem;
+        display: flex; align-items: center; gap: 0.75rem;
+        transition: background var(--t), border-color var(--t);
+    }
+    .logo-mark {
+        width: 30px; height: 30px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 12px var(--accent-glow);
+        transition: background var(--t), box-shadow var(--t);
+    }
+    .logo-mark svg { color: #fff; }
+    .logo-name {
+        font-size: 0.95rem; font-weight: 700;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: background var(--t);
+    }
+    .logo-tld { font-weight: 300; opacity: 0.7; }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
+    .header-tag {
+        font-size: 0.68rem; font-weight: 500;
+        color: var(--text-3);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: color var(--t);
+    }
+
+    /* ─── Theme toggle ───────────────────────────────────────────── */
+    .theme-btn {
+        width: 52px; height: 29px;
+        background: var(--border);
+        border: 1px solid var(--border-input);
+        border-radius: 100px;
+        cursor: pointer;
+        position: relative;
+        transition: background var(--t), border-color var(--t);
+        flex-shrink: 0;
+    }
+    .theme-btn::after {
+        content: '';
+        position: absolute;
+        top: 3px; left: 3px;
+        width: 21px; height: 21px;
+        border-radius: 50%;
+        background: var(--toggle-knob);
+        box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+        transition: transform var(--t), background var(--t);
+    }
+    [data-theme="dark"] .theme-btn::after { transform: translateX(23px); }
+    .toggle-icons {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 7px; pointer-events: none;
+    }
+    .toggle-icons svg { width: 11px; height: 11px; color: var(--text-3); }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+        position: relative; z-index: 1;
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 4rem 2rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 2rem;
+    }
+    .hero-text { }
+    .hero-badge {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: var(--accent-glow);
+        border: 1px solid rgba(139,126,255,0.25);
+        color: var(--accent);
+        font-size: 0.72rem; font-weight: 600;
+        letter-spacing: 0.05em; text-transform: uppercase;
+        padding: 0.35rem 0.85rem;
+        border-radius: 100px;
+        margin-bottom: 1.25rem;
+        animation: fadeUp 0.7s ease both;
+        transition: color var(--t), background var(--t), border-color var(--t);
+    }
+    .hero-badge::before {
+        content: '';
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulse 2s ease-in-out infinite;
+    }
+    .hero-h1 {
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        animation: fadeUp 0.7s 0.1s ease both;
+    }
+    .grad-text {
+        background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 50%, #60a5fa 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: gradShift 5s ease infinite, fadeUp 0.7s 0.1s ease both;
+    }
+    @keyframes gradShift {
+        0%,100% { background-position: 0% 50%; }
+        50%      { background-position: 100% 50%; }
+    }
+    .hero-sub {
+        font-size: 1rem; font-weight: 400; line-height: 1.65;
+        color: var(--text-2);
+        max-width: 440px;
+        margin-bottom: 2rem;
+        animation: fadeUp 0.7s 0.2s ease both;
+        transition: color var(--t);
+    }
+    .hero-cta {
+        animation: fadeUp 0.7s 0.3s ease both;
+    }
+    .btn-hero {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        background: linear-gradient(135deg, var(--accent), #7c6fff);
+        color: #fff;
+        padding: 0.85rem 1.75rem;
+        border-radius: 100px;
+        font-size: 0.9rem; font-weight: 600;
+        border: none; cursor: pointer; font-family: inherit;
+        box-shadow: 0 4px 24px var(--accent-glow);
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+    }
+    .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
+
+    /* ─── Hero illustration ──────────────────────────────────────── */
+    .hero-visual {
+        display: flex; justify-content: center; align-items: center;
+        animation: fadeUp 0.9s 0.15s ease both;
+    }
+    .hero-svg {
+        width: 100%; max-width: 360px;
+        overflow: visible;
+    }
+
+    /* SVG ring pulse */
+    .svg-ring {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 1;
+        opacity: 0;
+        animation: ringPulse 3s ease-out infinite;
+    }
+    .svg-ring-2 { animation-delay: 1s; }
+    .svg-ring-3 { animation-delay: 2s; }
+    @keyframes ringPulse {
+        0%   { r: 60; opacity: 0.5; }
+        100% { r: 160; opacity: 0; }
+    }
+
+    .svg-center {
+        filter: drop-shadow(0 8px 24px var(--accent-glow));
+        animation: floatY 4s ease-in-out infinite;
+    }
+    @keyframes floatY {
+        0%,100% { transform: translateY(0); }
+        50%      { transform: translateY(-12px); }
+    }
+
+    .svg-node {
+        animation: nodeFloat 5s ease-in-out infinite;
+    }
+    .svg-node:nth-child(1) { animation-delay: 0s; }
+    .svg-node:nth-child(2) { animation-delay: 0.8s; }
+    .svg-node:nth-child(3) { animation-delay: 1.6s; }
+    .svg-node:nth-child(4) { animation-delay: 2.4s; }
+    .svg-node:nth-child(5) { animation-delay: 3.2s; }
+    @keyframes nodeFloat {
+        0%,100% { transform: translateY(0) scale(1); }
+        50%      { transform: translateY(-8px) scale(1.05); }
+    }
+
+    .svg-line { stroke: var(--accent); stroke-opacity: 0.18; stroke-width: 1; fill: none; stroke-dasharray: 4 4; animation: dashMove 3s linear infinite; }
+    @keyframes dashMove { to { stroke-dashoffset: -20; } }
+
+    .svg-spark { animation: sparkAnim 2.5s ease-in-out infinite; }
+    .svg-spark:nth-child(2) { animation-delay: 0.5s; }
+    .svg-spark:nth-child(3) { animation-delay: 1s; }
+    @keyframes sparkAnim {
+        0%,100% { opacity: 0.6; transform: scale(1); }
+        50%      { opacity: 1; transform: scale(1.3); }
+    }
+
+    /* ─── Fade up entrance ───────────────────────────────────────── */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(22px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+        opacity: 0;
+        animation: fadeUp 0.65s ease forwards;
+    }
+
+    /* ─── Main container ─────────────────────────────────────────── */
+    .container {
+        position: relative; z-index: 1;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 1.5rem 5rem;
+    }
+
+    /* ─── Cards ──────────────────────────────────────────────────── */
+    .card {
+        background: var(--bg-card);
+        border-radius: 22px;
+        padding: 1.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        transition: background var(--t), border-color var(--t), box-shadow var(--t);
+    }
+    .card:hover { box-shadow: var(--shadow-card), 0 0 0 1px var(--border); }
+
+    .section-label {
+        font-size: 0.68rem; font-weight: 700;
+        letter-spacing: 0.09em; text-transform: uppercase;
+        color: var(--text-3);
+        margin-bottom: 1.15rem;
+        display: flex; align-items: center; gap: 0.4rem;
+        transition: color var(--t);
+    }
+    .section-label svg { color: var(--accent); transition: color var(--t); }
+
+    /* ─── Form ───────────────────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group.full { grid-column: 1/-1; }
+
+    label {
+        font-size: 0.72rem; font-weight: 500;
+        color: var(--text-2); letter-spacing: 0.01em;
+        transition: color var(--t);
+    }
+    input, select {
+        background: var(--bg-input);
+        border: 1px solid var(--border-input);
+        border-radius: 11px;
+        padding: 0.62rem 0.9rem;
+        font-size: 0.875rem; font-family: inherit; font-weight: 400;
+        color: var(--text-1);
+        outline: none; -webkit-appearance: none;
+        transition: background var(--t), border-color var(--t), color var(--t), box-shadow 0.15s;
+    }
+    input::placeholder { color: var(--placeholder); }
+    input:focus, select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a0a0c0' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        padding-right: 2.25rem; cursor: pointer;
+    }
+
+    /* ─── Buttons ────────────────────────────────────────────────── */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+        padding: 0.65rem 1.4rem;
+        border-radius: 100px; border: none;
+        cursor: pointer; font-family: inherit;
+        font-size: 0.875rem; font-weight: 600;
+        transition: all 0.2s cubic-bezier(.4,0,.2,1);
+        white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--accent), #7c6fff);
+        color: #fff;
+        box-shadow: 0 2px 16px var(--accent-glow);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px var(--accent-glow); }
+
+    .btn-danger {
+        background: var(--danger);
+        color: #fff;
+        box-shadow: 0 2px 12px rgba(240,64,64,0.25);
+    }
+    .btn-danger:hover { transform: translateY(-1px); filter: brightness(1.08); }
+
+    .btn-ghost {
+        background: var(--accent-glow);
+        color: var(--accent);
+    }
+    .btn-ghost:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+
+    .btn-main {
+        background: linear-gradient(135deg, var(--accent) 0%, #7c6fff 60%, #60a5fa 100%);
+        background-size: 200% 200%;
+        color: #fff;
+        padding: 0.9rem 2.75rem;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 28px var(--accent-glow);
+        border-radius: 100px;
+        transition: transform 0.2s, box-shadow 0.2s, background-position 0.4s;
+    }
+    .btn-main:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 40px var(--accent-glow);
+        background-position: right center;
+    }
+
+    .btn-sm { padding: 0.28rem 0.8rem; font-size: 0.72rem; }
+
+    /* ─── Recording ──────────────────────────────────────────────── */
+    .rec-controls {
+        display: flex; align-items: center; gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .rec-indicator {
+        display: flex; align-items: center; gap: 0.4rem;
+        font-size: 0.78rem; font-weight: 500;
+        color: var(--danger);
+        visibility: hidden;
+        transition: color var(--t);
+    }
+    .rec-indicator.on { visibility: visible; }
+    .rec-dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--danger);
+        animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+        0%,100% { opacity: 1; transform: scale(1); }
+        50%      { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    /* ─── Audio waveform ─────────────────────────────────────────── */
+    .waveform {
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 4px;
+        height: 40px;
+        margin: 0.75rem 0;
+    }
+    .waveform.on { display: flex; }
+    .wave-bar {
+        width: 4px;
+        border-radius: 2px;
+        background: linear-gradient(to top, var(--accent), var(--accent-2));
+        animation: waveAnim 1.2s ease-in-out infinite;
+        min-height: 6px;
+    }
+    .wave-bar:nth-child(1)  { animation-delay: 0.0s; }
+    .wave-bar:nth-child(2)  { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3)  { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4)  { animation-delay: 0.3s; }
+    .wave-bar:nth-child(5)  { animation-delay: 0.15s; }
+    .wave-bar:nth-child(6)  { animation-delay: 0.25s; }
+    .wave-bar:nth-child(7)  { animation-delay: 0.05s; }
+    .wave-bar:nth-child(8)  { animation-delay: 0.35s; }
+    .wave-bar:nth-child(9)  { animation-delay: 0.18s; }
+    .wave-bar:nth-child(10) { animation-delay: 0.28s; }
+    .wave-bar:nth-child(11) { animation-delay: 0.08s; }
+    .wave-bar:nth-child(12) { animation-delay: 0.22s; }
+    @keyframes waveAnim {
+        0%,100% { height: 8px;  opacity: 0.5; }
+        50%      { height: 36px; opacity: 1; }
+    }
+
+    /* ─── Transcript ─────────────────────────────────────────────── */
+    .transcript-box {
+        background: var(--bg-transcript);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        min-height: 130px; max-height: 260px;
+        overflow-y: auto;
+        font-size: 0.875rem; line-height: 1.7;
+        color: var(--text-1);
+        white-space: pre-wrap;
+        transition: background var(--t), border-color var(--t), color var(--t);
+    }
+    .transcript-box::-webkit-scrollbar { width: 4px; }
+    .transcript-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .placeholder { color: var(--placeholder); font-style: italic; font-weight: 300; }
+    .transcript-footer {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-top: 0.6rem;
+    }
+    .word-count { font-size: 0.72rem; color: var(--text-3); transition: color var(--t); }
+
+    /* ─── Alert ──────────────────────────────────────────────────── */
+    .alert {
+        padding: 0.7rem 1rem; border-radius: 10px;
+        font-size: 0.82rem; margin-bottom: 0.9rem;
+        display: none; color: #d97706;
+        background: rgba(251,191,36,0.1);
+        border: 1px solid rgba(251,191,36,0.2);
+    }
+    .alert.visible { display: block; }
+
+    /* ─── Center ─────────────────────────────────────────────────── */
+    .center { display: flex; justify-content: center; margin: 1.5rem 0 1rem; }
+
+    /* ─── Loading ────────────────────────────────────────────────── */
+    .loading { display: none; flex-direction: column; align-items: center; padding: 2rem; gap: 0.85rem; }
+    .loading.on { display: flex; }
+    .loading-text { font-size: 0.82rem; color: var(--text-2); transition: color var(--t); }
+    .spinner {
+        width: 28px; height: 28px;
+        border: 2.5px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        transition: border-color var(--t);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Results ────────────────────────────────────────────────── */
+    .results { display: none; }
+    .results.on { display: block; }
+
+    .category { margin-bottom: 1.2rem; }
+    .category-label {
+        font-size: 0.68rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        margin-bottom: 0.5rem; transition: color var(--t);
+    }
+    .cat-ideeen .category-label      { color: var(--accent); }
+    .cat-beslissingen .category-label { color: var(--success); }
+    .cat-actiepunten .category-label  { color: var(--danger); }
+    .cat-inzichten .category-label    { color: #f59e0b; }
+    .cat-vragen .category-label       { color: #38bdf8; }
+
+    .category ul { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+    .category li {
+        padding: 0.5rem 0.85rem;
+        border-radius: 10px;
+        font-size: 0.875rem; line-height: 1.55;
+        border-left: 2.5px solid;
+        transition: background var(--t), border-color var(--t);
+    }
+    .cat-ideeen li      { border-color: var(--accent);   background: var(--accent-glow); }
+    .cat-beslissingen li { border-color: var(--success);  background: rgba(52,211,153,0.08); }
+    .cat-actiepunten li  { border-color: var(--danger);   background: rgba(240,64,64,0.07); }
+    .cat-inzichten li    { border-color: #f59e0b;          background: rgba(245,158,11,0.07); }
+    .cat-vragen li       { border-color: #38bdf8;          background: rgba(56,189,248,0.07); }
+    .empty-note          { color: var(--text-3); font-style: italic; font-weight: 300; border: none !important; background: none !important; padding-left: 0; }
+
+    .results-actions { display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+    /* ─── Divider ────────────────────────────────────────────────── */
+    .divider { height: 1px; background: var(--border); margin: 1.25rem 0; transition: background var(--t); }
+
+    /* ─── Toast ──────────────────────────────────────────────────── */
+    .toast {
+        position: fixed; bottom: 2rem; left: 50%;
+        transform: translateX(-50%) translateY(60px);
+        background: var(--text-1); color: var(--bg);
+        padding: 0.65rem 1.35rem; border-radius: 100px;
+        font-size: 0.82rem; font-weight: 500;
+        opacity: 0; transition: all 0.25s cubic-bezier(.4,0,.2,1);
+        z-index: 999; white-space: nowrap; pointer-events: none;
+    }
+    .toast.on { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 680px) {
+        .hero { grid-template-columns: 1fr; padding: 2.5rem 1rem 1rem; }
+        .hero-visual { order: -1; }
+        .hero-svg { max-width: 260px; }
+        .form-grid { grid-template-columns: 1fr; }
+        .container { padding: 0 1rem 4rem; }
+        header { padding: 0 1rem; }
+        .header-tag { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+<!-- Animated background -->
+<div class="bg-layer">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+
+<!-- Header -->
+<header>
+    <div class="logo-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+    </div>
+    <span class="logo-name">entrepreneursheaven<span class="logo-tld">.ai</span></span>
+    <div class="header-right">
+        <span class="header-tag">AI Notulist</span>
+        <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Wissel thema">
+            <span class="toggle-icons">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </span>
+        </button>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-text">
+        <div class="hero-badge">AI-aangedreven brainstorm</div>
+        <h1 class="hero-h1">Jouw beste ideeën,<br><span class="grad-text">automatisch gevangen.</span></h1>
+        <p class="hero-sub">Spreek vrijuit tijdens uw brainstorm. entrepreneursheaven.ai luistert mee, filtert het kaf van het koren en levert direct gestructureerde notulen.</p>
+        <div class="hero-cta">
+            <a href="#sessie" class="btn-hero">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                </svg>
+                Start een sessie
+            </a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <svg class="hero-svg" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="cg" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#7c6fff"/>
+                    <stop offset="100%" stop-color="#5b4ef8"/>
+                </radialGradient>
+                <radialGradient id="ng" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.25"/>
+                    <stop offset="100%" stop-color="#5b4ef8" stop-opacity="0.08"/>
+                </radialGradient>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="6" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+
+            <!-- Pulsing rings -->
+            <circle class="svg-ring"        cx="180" cy="180" r="60"/>
+            <circle class="svg-ring svg-ring-2" cx="180" cy="180" r="60"/>
+            <circle class="svg-ring svg-ring-3" cx="180" cy="180" r="60"/>
+
+            <!-- Orbit path (dashed) -->
+            <circle cx="180" cy="180" r="118" stroke="var(--accent)" stroke-opacity="0.10" stroke-width="1" stroke-dasharray="5 8" fill="none"/>
+
+            <!-- Connection lines to nodes -->
+            <line class="svg-line" x1="180" y1="180" x2="72"  y2="100"/>
+            <line class="svg-line" x1="180" y1="180" x2="292" y2="108"/>
+            <line class="svg-line" x1="180" y1="180" x2="310" y2="220"/>
+            <line class="svg-line" x1="180" y1="180" x2="60"  y2="240"/>
+            <line class="svg-line" x1="180" y1="180" x2="160" y2="60"/>
+
+            <!-- Central mic circle -->
+            <g class="svg-center" style="transform-origin:180px 180px">
+                <circle cx="180" cy="180" r="58" fill="url(#cg)" filter="url(#glow)"/>
+                <circle cx="180" cy="180" r="58" fill="url(#cg)" opacity="0.7"/>
+                <!-- Mic icon -->
+                <rect x="170" y="154" width="20" height="30" rx="10" fill="white" opacity="0.95"/>
+                <path d="M162 184v4a18 18 0 0 0 36 0v-4" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <line x1="180" y1="206" x2="180" y2="214" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="173" y1="214" x2="187" y2="214" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+
+            <!-- Idea nodes -->
+            <!-- Node 1: Lightbulb / Idee -->
+            <g class="svg-node" style="transform-origin:72px 100px">
+                <circle cx="72" cy="100" r="28" fill="url(#ng)" stroke="var(--accent)" stroke-width="1" stroke-opacity="0.3"/>
+                <text x="72" y="96" text-anchor="middle" font-size="14" fill="var(--accent)" font-family="Inter,sans-serif">💡</text>
+                <text x="72" y="112" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="Inter,sans-serif" font-weight="600" opacity="0.7">Idee</text>
+            </g>
+
+            <!-- Node 2: Beslissing -->
+            <g class="svg-node" style="transform-origin:292px 108px">
+                <circle cx="292" cy="108" r="28" fill="url(#ng)" stroke="var(--accent)" stroke-width="1" stroke-opacity="0.3"/>
+                <text x="292" y="104" text-anchor="middle" font-size="14" fill="var(--accent)" font-family="Inter,sans-serif">✓</text>
+                <text x="292" y="120" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="Inter,sans-serif" font-weight="600" opacity="0.7">Beslissing</text>
+            </g>
+
+            <!-- Node 3: Actie -->
+            <g class="svg-node" style="transform-origin:310px 220px">
+                <circle cx="310" cy="220" r="26" fill="url(#ng)" stroke="var(--accent)" stroke-width="1" stroke-opacity="0.3"/>
+                <text x="310" y="216" text-anchor="middle" font-size="13" fill="var(--accent)" font-family="Inter,sans-serif">→</text>
+                <text x="310" y="231" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="Inter,sans-serif" font-weight="600" opacity="0.7">Actie</text>
+            </g>
+
+            <!-- Node 4: Inzicht -->
+            <g class="svg-node" style="transform-origin:60px 240px">
+                <circle cx="60" cy="240" r="26" fill="url(#ng)" stroke="var(--accent)" stroke-width="1" stroke-opacity="0.3"/>
+                <text x="60" y="236" text-anchor="middle" font-size="13" fill="var(--accent)" font-family="Inter,sans-serif">✦</text>
+                <text x="60" y="251" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="Inter,sans-serif" font-weight="600" opacity="0.7">Inzicht</text>
+            </g>
+
+            <!-- Node 5: Vraag -->
+            <g class="svg-node" style="transform-origin:160px 58px">
+                <circle cx="160" cy="58" r="24" fill="url(#ng)" stroke="var(--accent)" stroke-width="1" stroke-opacity="0.3"/>
+                <text x="160" y="55" text-anchor="middle" font-size="13" fill="var(--accent)" font-family="Inter,sans-serif">?</text>
+                <text x="160" y="70" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="Inter,sans-serif" font-weight="600" opacity="0.7">Vraag</text>
+            </g>
+
+            <!-- Floating sparks -->
+            <g class="svg-spark">
+                <circle cx="238" cy="60"  r="3" fill="var(--accent-2)" opacity="0.7"/>
+            </g>
+            <g class="svg-spark">
+                <circle cx="116" cy="310" r="2.5" fill="var(--accent-2)" opacity="0.6"/>
+            </g>
+            <g class="svg-spark">
+                <circle cx="330" cy="160" r="2" fill="var(--accent-2)" opacity="0.5"/>
+            </g>
+            <g class="svg-spark">
+                <circle cx="34"  cy="170" r="2.5" fill="var(--accent-2)" opacity="0.55"/>
+            </g>
+        </svg>
+    </div>
+</section>
+
+<!-- Main content -->
+<div class="container">
+
+    <!-- Sessie context -->
+    <div id="sessie" class="card animate-in" style="animation-delay:0.1s">
+        <div class="section-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Sessie context
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="deelnemers">Deelnemers</label>
+                <input type="text" id="deelnemers" placeholder="Bijv. Mark, Lisa, Roel">
+            </div>
+            <div class="form-group">
+                <label for="branche">Branche / Achtergrond</label>
+                <input type="text" id="branche" placeholder="Bijv. SaaS, marketing, zorg">
+            </div>
+            <div class="form-group full">
+                <label for="doel">Doel van deze sessie</label>
+                <input type="text" id="doel" placeholder="Bijv. Nieuwe functies voor Q3 bedenken">
+            </div>
+            <div class="form-group">
+                <label for="outputType">Gewenste output</label>
+                <select id="outputType">
+                    <option value="Volledige notulen met ideeën, beslissingen en actiepunten">Volledige notulen</option>
+                    <option value="Alleen actiepunten en beslissingen">Actiepunten &amp; beslissingen</option>
+                    <option value="Lijst van ideeën met kansen en risico's">Ideeën met kansen/risico's</option>
+                    <option value="Beknopte managementsamenvatting">Management samenvatting</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="extraContext">Aanvullende context</label>
+                <input type="text" id="extraContext" placeholder="Optioneel — bijv. budget €50k">
+            </div>
+        </div>
+    </div>
+
+    <!-- Opname -->
+    <div class="card animate-in" style="animation-delay:0.2s">
+        <div class="section-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            </svg>
+            Opname
+        </div>
+
+        <div class="alert" id="speechWarning">
+            Spraakherkenning werkt alleen in Google Chrome of Microsoft Edge.
+        </div>
+
+        <div class="rec-controls">
+            <button class="btn btn-primary" id="startBtn" onclick="startRecording()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                Starten
+            </button>
+            <button class="btn btn-danger" id="stopBtn" onclick="stopRecording()" disabled>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
+                Stoppen
+            </button>
+            <div class="rec-indicator" id="recIndicator">
+                <div class="rec-dot"></div>
+                Live
+            </div>
+        </div>
+
+        <!-- Audio waveform (shown while recording) -->
+        <div class="waveform" id="waveform">
+            <div class="wave-bar"></div><div class="wave-bar"></div>
+            <div class="wave-bar"></div><div class="wave-bar"></div>
+            <div class="wave-bar"></div><div class="wave-bar"></div>
+            <div class="wave-bar"></div><div class="wave-bar"></div>
+            <div class="wave-bar"></div><div class="wave-bar"></div>
+            <div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+
+        <div class="transcript-box" id="transcriptBox">
+            <span class="placeholder">Klik op Starten en begin te spreken. De transcriptie verschijnt hier live...</span>
+        </div>
+        <div class="transcript-footer">
+            <span class="word-count" id="wordCount">0 woorden</span>
+            <button class="btn btn-ghost btn-sm" onclick="clearTranscript()">Wissen</button>
+        </div>
+    </div>
+
+    <!-- Genereer -->
+    <div class="center animate-in" style="animation-delay:0.3s">
+        <button class="btn btn-main" id="processBtn" onclick="processWithClaude()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M9 12l2 2 4-4"/>
+                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.39 0 4.56.93 6.17 2.44"/>
+                <path d="M21 3v6h-6"/>
+            </svg>
+            Notulen genereren
+        </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loadingOverlay">
+        <div class="spinner"></div>
+        <span class="loading-text">entrepreneursheaven.ai analyseert uw sessie...</span>
+    </div>
+
+    <!-- Resultaten -->
+    <div class="card results" id="resultsSection">
+        <div class="section-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            Notulen
+        </div>
+        <div id="resultsContent"></div>
+        <div class="divider"></div>
+        <div class="results-actions">
+            <button class="btn btn-ghost btn-sm" onclick="copyResults()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="9" y="9" width="13" height="13" rx="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Kopieer als tekst
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="newSession()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                Nieuwe sessie
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // API-sleutel staat veilig op de server (Netlify omgevingsvariabele).
+
+    let recognition = null;
+    let transcript = '';
+    let isRecording = false;
+    let rawOutput = '';
+
+    // Theme
+    const saved = localStorage.getItem('eh-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+
+    function toggleTheme() {
+        const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('eh-theme', next);
+    }
+
+    // Speech API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        document.getElementById('speechWarning').classList.add('visible');
+        document.getElementById('startBtn').disabled = true;
+    }
+
+    function setupRecognition() {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'nl-NL';
+
+        recognition.onresult = (e) => {
+            let interim = '';
+            for (let i = e.resultIndex; i < e.results.length; i++) {
+                if (e.results[i].isFinal) transcript += e.results[i][0].transcript + ' ';
+                else interim += e.results[i][0].transcript;
+            }
+            const box = document.getElementById('transcriptBox');
+            box.textContent = transcript + interim;
+            box.scrollTop = box.scrollHeight;
+            updateWordCount();
+        };
+
+        recognition.onend = () => { if (isRecording) recognition.start(); };
+        recognition.onerror = (e) => { if (e.error !== 'no-speech') showToast('Fout: ' + e.error); };
+    }
+
+    function startRecording() {
+        transcript = '';
+        document.getElementById('transcriptBox').textContent = '';
+        setupRecognition();
+        recognition.start();
+        isRecording = true;
+
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('recIndicator').classList.add('on');
+        document.getElementById('waveform').classList.add('on');
+        updateWordCount();
+    }
+
+    function stopRecording() {
+        isRecording = false;
+        if (recognition) recognition.stop();
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('stopBtn').disabled = true;
+        document.getElementById('recIndicator').classList.remove('on');
+        document.getElementById('waveform').classList.remove('on');
+        const n = transcript.trim().split(/\s+/).filter(Boolean).length;
+        showToast(n + ' woorden vastgelegd');
+    }
+
+    function clearTranscript() {
+        transcript = '';
+        document.getElementById('transcriptBox').innerHTML = '<span class="placeholder">Klik op Starten en begin te spreken. De transcriptie verschijnt hier live...</span>';
+        updateWordCount();
+    }
+
+    function updateWordCount() {
+        const n = transcript.trim().split(/\s+/).filter(Boolean).length;
+        document.getElementById('wordCount').textContent = n + ' woorden';
+    }
+
+    async function processWithClaude() {
+        const text = transcript.trim();
+        if (!text) { showToast('Er is nog geen transcriptie om te verwerken'); return; }
+        if (isRecording) stopRecording();
+
+        document.getElementById('loadingOverlay').classList.add('on');
+        document.getElementById('resultsSection').classList.remove('on');
+        document.getElementById('processBtn').disabled = true;
+
+        try {
+            const resp = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: 'claude-haiku-4-5',
+                    max_tokens: 2048,
+                    system: buildSystemPrompt(),
+                    messages: [{ role: 'user', content: 'Verwerk de volgende transcriptie van onze brainstormsessie en lever de gestructureerde notulen:\n\n' + text }]
+                })
+            });
+
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                throw new Error(err.error?.message || 'API fout ' + resp.status);
+            }
+
+            const data = await resp.json();
+            rawOutput = data.content[0].text;
+            renderResults(rawOutput);
+
+        } catch (e) {
+            showToast('Fout: ' + e.message);
+        } finally {
+            document.getElementById('loadingOverlay').classList.remove('on');
+            document.getElementById('processBtn').disabled = false;
+        }
+    }
+
+    function buildSystemPrompt() {
+        const g = id => document.getElementById(id).value.trim() || 'Niet opgegeven';
+        const doel = g('doel');
+        return `Je bent een stille, intelligente notulist voor een brainstormsessie. Je luistert, filtert en noteert — je praat niet terug, je geeft geen meningen, je stelt geen vragen.
+
+## Context van deze sessie
+Deelnemers: ${g('deelnemers')}
+Branche / achtergrond: ${g('branche')}
+Doel van deze sessie: ${doel}
+Gewenste output: ${document.getElementById('outputType').value}
+Aanvullende context: ${g('extraContext')}
+
+## Outputstructuur
+Gebruik EXACT deze vijf kopjes:
+
+### Ideeën
+- [idee]
+
+### Beslissingen
+- [beslissing]
+
+### Actiepunten
+- [Naam] → [actie]
+
+### Inzichten
+- [inzicht]
+
+### Open vragen
+- [vraag]
+
+## Filterregels
+- Negeer: small talk, herhalingen, aarzelingen, vulwoorden, zijsporen
+- Behoud: alles wat direct of indirect relevant is voor ${doel}
+- Twijfelgeval: noteer onder "Inzichten"
+- Schrijf altijd in de taal van het gesprek
+- Wees bondig. Eén idee = één zin.
+- Verzin niets.
+- Als een sectie leeg is, schrijf dan precies "— geen —" onder dat kopje.`;
+    }
+
+    const CATS = [
+        { key: 'Ideeën',       cls: 'cat-ideeen',        label: 'Ideeën' },
+        { key: 'Beslissingen', cls: 'cat-beslissingen',   label: 'Beslissingen' },
+        { key: 'Actiepunten',  cls: 'cat-actiepunten',    label: 'Actiepunten' },
+        { key: 'Inzichten',    cls: 'cat-inzichten',      label: 'Inzichten' },
+        { key: 'Open vragen',  cls: 'cat-vragen',         label: 'Open vragen' }
+    ];
+
+    function renderResults(text) {
+        const map = {};
+        CATS.forEach(c => { map[c.key] = []; });
+        let current = null;
+
+        for (const line of text.split('\n')) {
+            const t = line.trim();
+            const h = t.match(/^###\s+(.+)/);
+            if (h) { current = CATS.find(c => c.key === h[1].trim()) ? h[1].trim() : null; continue; }
+            if (current && t.startsWith('- ')) {
+                const item = t.slice(2).trim();
+                if (item && item !== '— geen —') map[current].push(item);
+            }
+        }
+
+        let html = '';
+        for (const cat of CATS) {
+            const rows = map[cat.key].length
+                ? map[cat.key].map(i => `<li>${esc(i)}</li>`).join('')
+                : `<li class="empty-note">— geen —</li>`;
+            html += `<div class="category ${cat.cls}"><div class="category-label">${cat.label}</div><ul>${rows}</ul></div>`;
+        }
+
+        const total = CATS.reduce((n, c) => n + map[c.key].length, 0);
+        if (total === 0) html = `<pre style="white-space:pre-wrap;font-size:.875rem;line-height:1.7;color:var(--text-2)">${esc(text)}</pre>`;
+
+        document.getElementById('resultsContent').innerHTML = html;
+        document.getElementById('resultsSection').classList.add('on');
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function esc(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function copyResults() {
+        if (!rawOutput) return;
+        navigator.clipboard.writeText(rawOutput)
+            .then(() => showToast('Gekopieerd naar klembord'))
+            .catch(() => {
+                const el = document.createElement('textarea');
+                el.value = rawOutput;
+                document.body.appendChild(el); el.select();
+                document.execCommand('copy'); document.body.removeChild(el);
+                showToast('Gekopieerd naar klembord');
+            });
+    }
+
+    function newSession() {
+        transcript = ''; rawOutput = '';
+        document.getElementById('transcriptBox').innerHTML = '<span class="placeholder">Klik op Starten en begin te spreken. De transcriptie verschijnt hier live...</span>';
+        document.getElementById('resultsSection').classList.remove('on');
+        document.getElementById('resultsContent').innerHTML = '';
+        updateWordCount();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('on');
+        setTimeout(() => t.classList.remove('on'), 2800);
+    }
+</script>
+</body>
+</html>
