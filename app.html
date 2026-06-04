@@ -593,6 +593,61 @@
 
     .results-actions { display: flex; gap: 0.6rem; margin-top: 1.5rem; flex-wrap: wrap; }
 
+    /* ─── Action cards (agenda + Notion) ────────────────────────── */
+    .action-cards-label {
+        font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+        letter-spacing: 0.07em; color: var(--text-3); margin: 0 0 0.85rem;
+    }
+    .action-card {
+        border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+        transition: border-color var(--t), background var(--t); margin-bottom: 0.6rem;
+    }
+    .action-card:last-child { margin-bottom: 0; }
+    .action-card-header {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 0.875rem 1rem; cursor: pointer; user-select: none;
+    }
+    .action-card-header:hover { background: var(--surface); }
+    .action-card-icon {
+        width: 32px; height: 32px; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; font-size: 15px;
+    }
+    .action-card-icon.agenda { background: rgba(91,78,248,0.12); color: var(--accent); }
+    .action-card-icon.notion { background: rgba(0,0,0,0.06); color: var(--text-1); }
+    [data-theme="dark"] .action-card-icon.notion { background: rgba(255,255,255,0.1); }
+    .action-card-info { flex: 1; min-width: 0; }
+    .action-card-info strong { font-size: 0.875rem; font-weight: 600; color: var(--text-1); }
+    .action-card-info span { display: block; font-size: 0.75rem; color: var(--text-3); margin-top: 1px; }
+    .action-card-toggle {
+        width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border);
+        background: transparent; cursor: pointer; display: flex; align-items: center;
+        justify-content: center; color: var(--text-3); transition: all var(--t); flex-shrink: 0;
+    }
+    .action-card-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+    .action-card-toggle.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .action-card-body { display: none; padding: 0 1rem 1rem; }
+    .action-card-body.open { display: block; }
+    .action-form-row {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.65rem;
+    }
+    .action-form-row.single { grid-template-columns: 1fr; }
+    .action-form-row > div label {
+        font-size: 0.72rem; font-weight: 600; color: var(--text-3);
+        text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 0.3rem;
+    }
+    .action-form-row input[type="text"],
+    .action-form-row input[type="datetime-local"] {
+        width: 100%; padding: 0.55rem 0.75rem; border-radius: 8px;
+        border: 1px solid var(--border); background: var(--surface);
+        color: var(--text-1); font-size: 0.82rem; font-family: inherit;
+        box-sizing: border-box; transition: border-color var(--t), background var(--t); outline: none;
+    }
+    .action-form-row input:focus { border-color: var(--accent); }
+    .notion-status { font-size: 0.82rem; color: var(--text-3); margin-top: 0.6rem; line-height: 1.4; }
+    .notion-status.success { color: var(--success); }
+    .notion-status.error { color: var(--danger); }
+
     /* ─── Divider ────────────────────────────────────────────────── */
     .divider { height: 1px; background: var(--border); margin: 1.25rem 0; transition: background var(--t); }
 
@@ -910,6 +965,92 @@
                 Nieuwe sessie
             </button>
         </div>
+
+        <!-- ─── Optional: Agenda + Notion ─────────────────────── -->
+        <div id="actionCards" style="display:none;">
+            <div class="divider" style="margin-top:1.25rem;"></div>
+            <p class="action-cards-label">Sessie opslaan</p>
+
+            <!-- Agenda reminder -->
+            <div class="action-card">
+                <div class="action-card-header" onclick="toggleAgenda()">
+                    <div class="action-card-icon agenda">📅</div>
+                    <div class="action-card-info">
+                        <strong>Agenda reminder</strong>
+                        <span>Stel een herinnering in voor een vervolgactie</span>
+                    </div>
+                    <button class="action-card-toggle" id="agendaToggleBtn" onclick="event.stopPropagation();toggleAgenda()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="action-card-body" id="agendaBody">
+                    <div class="action-form-row single">
+                        <div>
+                            <label for="agendaTitle">Titel van de afspraak</label>
+                            <input type="text" id="agendaTitle" placeholder="Bijv. Follow-up campagne Q3">
+                        </div>
+                    </div>
+                    <div class="action-form-row">
+                        <div>
+                            <label for="agendaDate">Datum &amp; tijd</label>
+                            <input type="datetime-local" id="agendaDate">
+                        </div>
+                        <div>
+                            <label for="agendaDuration">Duur (minuten)</label>
+                            <input type="text" id="agendaDuration" value="60" placeholder="60">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="downloadAgendaReminder()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download .ics bestand
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notion integration -->
+            <div class="action-card">
+                <div class="action-card-header" onclick="toggleNotion()">
+                    <div class="action-card-icon notion">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4.459 4.208c.746.606 1.026.56 2.428.469l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/>
+                        </svg>
+                    </div>
+                    <div class="action-card-info">
+                        <strong>Opslaan in Notion</strong>
+                        <span>Exporteer de notulen direct naar je Notion workspace</span>
+                    </div>
+                    <button class="action-card-toggle" id="notionToggleBtn" onclick="event.stopPropagation();toggleNotion()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="action-card-body" id="notionBody">
+                    <div class="action-form-row single">
+                        <div>
+                            <label for="notionTitle">Paginatitel in Notion</label>
+                            <input type="text" id="notionTitle" placeholder="Bijv. Brainstorm Q3 Campagne">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="notionSaveBtn" onclick="saveToNotion()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Opslaan in Notion
+                    </button>
+                    <p class="notion-status" id="notionStatus"></p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -923,6 +1064,8 @@
     let transcript = '';
     let isRecording = false;
     let rawOutput = '';
+    let parsedCategories = {};
+    let sessionGoal = '';
 
     // Theme
     const saved = localStorage.getItem('eh-theme') || 'light';
@@ -1126,6 +1269,23 @@ Gebruik EXACT deze vijf kopjes:
         document.getElementById('resultsContent').innerHTML = html;
         document.getElementById('resultsSection').classList.add('on');
         document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Save parsed data for export features
+        parsedCategories = map;
+        sessionGoal = (document.getElementById('doel').value || '').trim();
+
+        // Pre-fill action card fields
+        const _pad = n => String(n).padStart(2, '0');
+        const d2m = new Date();
+        d2m.setMonth(d2m.getMonth() + 2);
+        d2m.setHours(10, 0, 0, 0);
+        const dtLocal = `${d2m.getFullYear()}-${_pad(d2m.getMonth()+1)}-${_pad(d2m.getDate())}T10:00`;
+        document.getElementById('agendaDate').value = dtLocal;
+        document.getElementById('agendaTitle').value = sessionGoal || 'Brainstorm follow-up';
+        document.getElementById('notionTitle').value = sessionGoal || 'Brainstorm notulen';
+
+        // Show the optional action cards
+        document.getElementById('actionCards').style.display = 'block';
     }
 
     function esc(s) {
@@ -1147,11 +1307,119 @@ Gebruik EXACT deze vijf kopjes:
 
     function newSession() {
         transcript = ''; rawOutput = '';
+        parsedCategories = {}; sessionGoal = '';
         document.getElementById('transcriptBox').innerHTML = '<span class="placeholder">Klik op Starten en begin te spreken. De transcriptie verschijnt hier live...</span>';
         document.getElementById('resultsSection').classList.remove('on');
         document.getElementById('resultsContent').innerHTML = '';
+        // Reset action cards
+        document.getElementById('actionCards').style.display = 'none';
+        document.getElementById('agendaBody').classList.remove('open');
+        document.getElementById('notionBody').classList.remove('open');
+        document.getElementById('agendaToggleBtn').classList.remove('active');
+        document.getElementById('notionToggleBtn').classList.remove('active');
+        document.getElementById('agendaToggleBtn').innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        document.getElementById('notionToggleBtn').innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        document.getElementById('notionStatus').textContent = '';
         updateWordCount();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ──── Agenda reminder ───────────────────────────────────────── */
+    function toggleAgenda() {
+        const body = document.getElementById('agendaBody');
+        const btn  = document.getElementById('agendaToggleBtn');
+        const open = body.classList.toggle('open');
+        btn.classList.toggle('active', open);
+        btn.innerHTML = open
+            ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+            : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    }
+
+    function downloadAgendaReminder() {
+        const title    = document.getElementById('agendaTitle').value.trim() || 'Brainstorm follow-up';
+        const dateVal  = document.getElementById('agendaDate').value;
+        const duration = parseInt(document.getElementById('agendaDuration').value) || 60;
+        if (!dateVal) { showToast('Kies eerst een datum en tijd'); return; }
+
+        const start = new Date(dateVal);
+        const end   = new Date(start.getTime() + duration * 60000);
+
+        const pad = n => String(n).padStart(2, '0');
+        const fmt = d =>
+            `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+
+        // Build description from the parsed brainstorm output
+        let desc = sessionGoal ? `Doel: ${sessionGoal}\\n\\n` : '';
+        for (const cat of CATS) {
+            const items = parsedCategories[cat.key] || [];
+            if (items.length) desc += `${cat.label}:\\n${items.map(i => `• ${i}`).join('\\n')}\\n\\n`;
+        }
+        desc = desc.trim().replace(/,/g, '\\,').replace(/;/g, '\\;');
+
+        const ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//entrepreneursheaven.ai//brainstorm-notulist//NL',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            'BEGIN:VEVENT',
+            `DTSTART:${fmt(start)}`,
+            `DTEND:${fmt(end)}`,
+            `SUMMARY:${title}`,
+            `DESCRIPTION:${desc}`,
+            `UID:brainstorm-${Date.now()}@entrepreneursheaven.ai`,
+            'STATUS:CONFIRMED',
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].join('\r\n');
+
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = 'brainstorm-reminder.ics';
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
+        showToast('Agenda reminder gedownload ✓');
+    }
+
+    /* ──── Notion integration ────────────────────────────────────── */
+    function toggleNotion() {
+        const body = document.getElementById('notionBody');
+        const btn  = document.getElementById('notionToggleBtn');
+        const open = body.classList.toggle('open');
+        btn.classList.toggle('active', open);
+        btn.innerHTML = open
+            ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+            : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    }
+
+    async function saveToNotion() {
+        const title  = document.getElementById('notionTitle').value.trim() || sessionGoal || 'Brainstorm notulen';
+        const btn    = document.getElementById('notionSaveBtn');
+        const status = document.getElementById('notionStatus');
+
+        btn.disabled = true;
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="30" stroke-dashoffset="10"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle></svg> Bezig...';
+        status.textContent = ''; status.className = 'notion-status';
+
+        try {
+            const resp = await fetch('/api/notion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, goal: sessionGoal, categories: parsedCategories })
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+            status.innerHTML = `✓ Opgeslagen! <a href="${data.url}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:600;">Open in Notion →</a>`;
+            status.className = 'notion-status success';
+            showToast('Opgeslagen in Notion ✓');
+        } catch (err) {
+            status.textContent = `Fout: ${err.message}`;
+            status.className = 'notion-status error';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Opslaan in Notion';
+        }
     }
 
     function showToast(msg) {
