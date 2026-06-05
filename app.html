@@ -647,6 +647,75 @@
     .notion-status { font-size: 0.82rem; color: var(--text-3); margin-top: 0.6rem; line-height: 1.4; }
     .notion-status.success { color: var(--success); }
     .notion-status.error { color: var(--danger); }
+    /* Notion header button */
+    .btn-notion-hdr {
+        width: 32px; height: 32px; border-radius: 8px;
+        border: 1px solid var(--border); background: transparent;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        color: var(--text-3); transition: all var(--t);
+    }
+    .btn-notion-hdr:hover { color: var(--text-1); border-color: var(--text-2); background: var(--surface); }
+    .btn-notion-hdr.connected { color: var(--success); border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.08); }
+
+    /* Notion modal */
+    .notion-modal-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.3); backdrop-filter: blur(2px);
+        z-index: 900;
+    }
+    .notion-modal-overlay.open { display: block; }
+    .notion-modal {
+        display: none; position: fixed; top: 64px; right: 1rem;
+        width: min(420px, calc(100vw - 2rem));
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 20px; padding: 1.25rem;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+        z-index: 901; transition: background var(--t), border-color var(--t);
+        max-height: calc(100vh - 80px); overflow-y: auto;
+    }
+    .notion-modal.open { display: block; }
+    .notion-modal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .notion-modal-close {
+        width: 28px; height: 28px; border-radius: 7px;
+        border: 1px solid var(--border); background: transparent;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        color: var(--text-3); transition: all var(--t);
+    }
+    .notion-modal-close:hover { color: var(--text-1); border-color: var(--text-2); }
+
+    /* Notion setup steps */
+    .notion-steps { display: flex; flex-direction: column; gap: 0.6rem; }
+    .notion-step { display: flex; gap: 0.7rem; align-items: flex-start; }
+    .notion-step-num {
+        width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+        background: var(--accent); color: #fff;
+        font-size: 0.65rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        margin-top: 1px;
+    }
+    .notion-step-body { flex: 1; }
+    .notion-step-body strong { display: block; font-size: 0.8rem; color: var(--text-1); margin-bottom: 2px; }
+    .notion-step-body span { font-size: 0.77rem; color: var(--text-3); line-height: 1.55; }
+    .notion-step-body em { font-style: normal; font-weight: 600; color: var(--text-2); }
+    .notion-step-body code { font-family: monospace; font-size: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 4px; }
+    .notion-link { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .notion-link:hover { text-decoration: underline; }
+    .notion-badge {
+        display: flex; align-items: center; gap: 0.5rem;
+        padding: 0.45rem 0.7rem; border-radius: 8px;
+        background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25);
+        font-size: 0.8rem; color: var(--success);
+    }
+    .notion-badge strong { font-weight: 600; }
+    .notion-disconnect {
+        margin-left: auto; background: none; border: none; cursor: pointer;
+        font-size: 0.75rem; color: var(--text-3); padding: 0; font-family: inherit;
+        text-decoration: underline; text-underline-offset: 2px;
+    }
+    .notion-disconnect:hover { color: var(--danger); }
 
     /* ─── Divider ────────────────────────────────────────────────── */
     .divider { height: 1px; background: var(--border); margin: 1.25rem 0; transition: background var(--t); }
@@ -707,6 +776,11 @@
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
             </span>
+        </button>
+        <button class="btn-notion-hdr" id="notionHdrBtn" onclick="openNotionModal()" title="Notion koppelen">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M4.459 4.208c.746.606 1.026.56 2.428.469l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933z"/>
+            </svg>
         </button>
         <button class="btn-logout" onclick="logOut()" title="Uitloggen">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
@@ -1032,27 +1106,190 @@
                     </button>
                 </div>
                 <div class="action-card-body" id="notionBody">
-                    <div class="action-form-row single">
-                        <div>
-                            <label for="notionTitle">Paginatitel in Notion</label>
-                            <input type="text" id="notionTitle" placeholder="Bijv. Brainstorm Q3 Campagne">
+
+                    <!-- ── Niet verbonden: setup-gids ── -->
+                    <div id="notionDisconnected">
+                        <p style="font-size:0.82rem;color:var(--text-3);margin:0 0 1rem;line-height:1.6;">
+                            Koppel je eigen Notion. Je token blijft <strong style="color:var(--text-2)">alleen in jouw browser</strong> — niemand anders heeft er toegang toe.
+                        </p>
+
+                        <!-- Stappen -->
+                        <div class="notion-steps">
+                            <div class="notion-step">
+                                <div class="notion-step-num">1</div>
+                                <div class="notion-step-body">
+                                    <strong>Maak een nieuwe koppeling aan</strong>
+                                    <span>Ga naar <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noopener" class="notion-link">notion.so/profile/integrations</a> → klik <em>"Nieuwe koppeling"</em> → geef het een naam → kies <em>"Toegangstoken"</em> → klik <em>"Koppeling maken"</em>.</span>
+                                </div>
+                            </div>
+                            <div class="notion-step">
+                                <div class="notion-step-num">2</div>
+                                <div class="notion-step-body">
+                                    <strong>Kopieer je token</strong>
+                                    <span>Op de volgende pagina zie je je token (begint met <code>ntn_</code> of <code>secret_</code>). Klik op het oogje of <em>"Show"</em> en kopieer hem volledig.</span>
+                                </div>
+                            </div>
+                            <div class="notion-step">
+                                <div class="notion-step-num">3</div>
+                                <div class="notion-step-body">
+                                    <strong>Maak een Notion-pagina en deel die</strong>
+                                    <span>Maak een pagina aan in Notion (bijv. <em>"Brainstorm Notulen"</em>). Klik op <em>"···"</em> rechts → <em>"Verbindingen"</em> of <em>"Add connections"</em> → selecteer de koppeling die je net aanmaakte.</span>
+                                </div>
+                            </div>
+                            <div class="notion-step">
+                                <div class="notion-step-num">4</div>
+                                <div class="notion-step-body">
+                                    <strong>Kopieer de paginalink</strong>
+                                    <span>Klik op <em>"Delen"</em> → <em>"Link kopiëren"</em> in Notion. Plak de link hieronder.</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Invoervelden -->
+                        <div class="action-form-row single" style="margin-top:1rem;">
+                            <div>
+                                <label for="notionTokenInput">Jouw Notion token</label>
+                                <input type="password" id="notionTokenInput" placeholder="ntn_xxxxxxxx… of secret_xxxxxxxx…" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="action-form-row single">
+                            <div>
+                                <label for="notionPageUrl">Notion pagina-URL</label>
+                                <input type="text" id="notionPageUrl" placeholder="https://notion.so/Brainstorm-Notulen-abc123...">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="notionConnectBtn" onclick="saveNotionCredentials()">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            Verbind mijn Notion
+                        </button>
+                        <p class="notion-status" id="notionConnectStatus"></p>
                     </div>
-                    <button class="btn btn-primary btn-sm" id="notionSaveBtn" onclick="saveToNotion()">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                            <polyline points="17 21 17 13 7 13 7 21"/>
-                            <polyline points="7 3 7 8 15 8"/>
-                        </svg>
-                        Opslaan in Notion
-                    </button>
-                    <p class="notion-status" id="notionStatus"></p>
+
+                    <!-- ── Verbonden ── -->
+                    <div id="notionConnected" style="display:none;">
+                        <div class="notion-badge">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Verbonden met <strong id="notionWorkspaceName">Notion</strong></span>
+                            <button class="notion-disconnect" onclick="disconnectNotion()">Ontkoppelen</button>
+                        </div>
+                        <div class="action-form-row single" style="margin-top:0.75rem;">
+                            <div>
+                                <label for="notionTitle">Paginatitel in Notion</label>
+                                <input type="text" id="notionTitle" placeholder="Bijv. Brainstorm Q3 Campagne">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="notionSaveBtn" onclick="saveToNotion()">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Opslaan in Notion
+                        </button>
+                        <p class="notion-status" id="notionStatus"></p>
+                    </div>
+
                 </div>
             </div>
         </div>
 
     </div>
 
+</div>
+
+<!-- Notion settings modal -->
+<div class="notion-modal-overlay" id="notionModalOverlay" onclick="closeNotionModal()"></div>
+<div class="notion-modal" id="notionModal">
+    <div class="notion-modal-header">
+        <div style="display:flex;align-items:center;gap:0.6rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-1)">
+                <path d="M4.459 4.208c.746.606 1.026.56 2.428.469l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933z"/>
+            </svg>
+            <strong style="font-size:0.95rem;">Notion koppelen</strong>
+        </div>
+        <button class="notion-modal-close" onclick="closeNotionModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Niet verbonden -->
+    <div id="modalNotionDisconnected">
+        <p style="font-size:0.82rem;color:var(--text-3);margin:0 0 1rem;line-height:1.6;">
+            Koppel je eigen Notion. Je token blijft <strong style="color:var(--text-2)">alleen in jouw browser</strong> — niemand anders heeft er toegang toe.
+        </p>
+        <div class="notion-steps">
+            <div class="notion-step">
+                <div class="notion-step-num">1</div>
+                <div class="notion-step-body">
+                    <strong>Maak een nieuwe koppeling aan</strong>
+                    <span>Ga naar <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noopener" class="notion-link">notion.so/profile/integrations</a> → klik <em>"Nieuwe koppeling"</em> → geef het een naam → kies <em>"Toegangstoken"</em> → klik <em>"Koppeling maken"</em>.</span>
+                </div>
+            </div>
+            <div class="notion-step">
+                <div class="notion-step-num">2</div>
+                <div class="notion-step-body">
+                    <strong>Kopieer je token</strong>
+                    <span>Klik op het oogje naast je token (begint met <code>ntn_</code> of <code>secret_</code>) en kopieer hem volledig.</span>
+                </div>
+            </div>
+            <div class="notion-step">
+                <div class="notion-step-num">3</div>
+                <div class="notion-step-body">
+                    <strong>Maak een pagina en deel die</strong>
+                    <span>Maak een pagina aan in Notion (bijv. <em>"Brainstorm Notulen"</em>) → klik <em>"···"</em> rechts → <em>"Verbindingen"</em> → selecteer jouw koppeling.</span>
+                </div>
+            </div>
+            <div class="notion-step">
+                <div class="notion-step-num">4</div>
+                <div class="notion-step-body">
+                    <strong>Kopieer de paginalink</strong>
+                    <span>Klik op <em>"Delen"</em> → <em>"Link kopiëren"</em> in Notion. Plak hem hieronder.</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:1rem;">
+            <div>
+                <label style="font-size:0.72rem;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem;">Jouw Notion token</label>
+                <input type="password" id="modalNotionToken" placeholder="ntn_xxxxxxxx… of secret_xxxxxxxx…"
+                    style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-1);font-size:.82rem;font-family:inherit;box-sizing:border-box;outline:none;"
+                    autocomplete="off">
+            </div>
+            <div>
+                <label style="font-size:0.72rem;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem;">Notion pagina-URL</label>
+                <input type="text" id="modalNotionUrl" placeholder="https://notion.so/Brainstorm-Notulen-abc123..."
+                    style="width:100%;padding:.55rem .75rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-1);font-size:.82rem;font-family:inherit;box-sizing:border-box;outline:none;">
+            </div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="modalConnectBtn" onclick="saveNotionFromModal()" style="margin-top:.75rem;width:100%;justify-content:center;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            Verbind mijn Notion
+        </button>
+        <p class="notion-status" id="modalNotionStatus" style="margin-top:.5rem;"></p>
+    </div>
+
+    <!-- Verbonden -->
+    <div id="modalNotionConnected" style="display:none;">
+        <div class="notion-badge" style="margin-bottom:1rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Verbonden met <strong id="modalWorkspaceName">Notion</strong></span>
+        </div>
+        <p style="font-size:0.82rem;color:var(--text-3);line-height:1.6;margin:0 0 1rem;">
+            Je brainstormsessies worden opgeslagen in jouw privé Notion-pagina. Je kunt de verbinding altijd ontkoppelen en opnieuw instellen.
+        </p>
+        <button class="btn btn-ghost btn-sm" onclick="disconnectNotionFromModal()" style="color:var(--danger);border-color:var(--danger);">
+            Ontkoppelen
+        </button>
+    </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1080,6 +1317,10 @@
     netlifyIdentity.on('logout', () => { window.location.href = '/'; });
 
     function logOut() { netlifyIdentity.logout(); }
+
+    // Zet Notion-knop in de header gelijk goed
+    updateNotionUI();
+
 
     function toggleTheme() {
         const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -1382,7 +1623,166 @@ Gebruik EXACT deze vijf kopjes:
         showToast('Agenda reminder gedownload ✓');
     }
 
-    /* ──── Notion integration ────────────────────────────────────── */
+    /* ──── Notion — per-gebruiker token ─────────────────────────── */
+    function getNotionConn() {
+        try { return JSON.parse(localStorage.getItem('eh-notion') || 'null'); }
+        catch { return null; }
+    }
+
+    function updateNotionUI() {
+        const conn = getNotionConn();
+        const ok   = conn && conn.token;
+        // Kaart in de resultaten
+        const nc = document.getElementById('notionConnected');
+        const nd = document.getElementById('notionDisconnected');
+        if (nc) nc.style.display = ok ? 'block' : 'none';
+        if (nd) nd.style.display = ok ? 'none'  : 'block';
+        if (ok && document.getElementById('notionWorkspaceName'))
+            document.getElementById('notionWorkspaceName').textContent = conn.label || 'Notion';
+        // Header-knop kleur
+        const hdrBtn = document.getElementById('notionHdrBtn');
+        if (hdrBtn) hdrBtn.classList.toggle('connected', ok);
+        // Modal
+        const mConn = document.getElementById('modalNotionConnected');
+        const mDisc = document.getElementById('modalNotionDisconnected');
+        if (mConn) mConn.style.display = ok ? 'block' : 'none';
+        if (mDisc) mDisc.style.display = ok ? 'none'  : 'block';
+        if (ok && document.getElementById('modalWorkspaceName'))
+            document.getElementById('modalWorkspaceName').textContent = conn.label || 'Notion';
+    }
+
+    function openNotionModal() {
+        document.getElementById('notionModalOverlay').classList.add('open');
+        document.getElementById('notionModal').classList.add('open');
+        updateNotionUI();
+        // Reset status
+        const s = document.getElementById('modalNotionStatus');
+        if (s) { s.textContent = ''; s.className = 'notion-status'; }
+    }
+
+    function closeNotionModal() {
+        document.getElementById('notionModalOverlay').classList.remove('open');
+        document.getElementById('notionModal').classList.remove('open');
+    }
+
+    async function saveNotionFromModal() {
+        const token  = document.getElementById('modalNotionToken').value.trim();
+        const urlVal = document.getElementById('modalNotionUrl').value.trim();
+        const status = document.getElementById('modalNotionStatus');
+        const btn    = document.getElementById('modalConnectBtn');
+
+        if (!token.startsWith('secret_') && !token.startsWith('ntn_')) {
+            status.textContent = 'Token klopt niet — moet beginnen met "ntn_" of "secret_".';
+            status.className = 'notion-status error'; return;
+        }
+        const pageId = extractNotionPageId(urlVal);
+        if (!pageId) {
+            status.textContent = 'Kan geen geldige pagina-ID vinden. Kopieer de link via "Delen" in Notion.';
+            status.className = 'notion-status error'; return;
+        }
+
+        btn.disabled = true; btn.textContent = 'Verbinding testen…';
+        status.textContent = ''; status.className = 'notion-status';
+
+        try {
+            const resp = await fetch('/api/notion-verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notionToken: token, pageId })
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+
+            localStorage.setItem('eh-notion', JSON.stringify({
+                token, pageId,
+                parentType: data.type || 'page',
+                label: data.title || 'Mijn Notion'
+            }));
+            updateNotionUI();
+            showToast(`Notion verbonden: ${data.title || 'pagina'} ✓`);
+            setTimeout(closeNotionModal, 1200);
+        } catch (err) {
+            status.textContent = `Fout: ${err.message}`;
+            status.className = 'notion-status error';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Verbind mijn Notion';
+        }
+    }
+
+    function disconnectNotionFromModal() {
+        localStorage.removeItem('eh-notion');
+        updateNotionUI();
+        showToast('Notion ontkoppeld');
+    }
+
+    // Haal de pagina-ID uit een Notion-URL
+    // Notion-URLs hebben de vorm: https://notion.so/Pagina-Titel-abc123def456...
+    // of: https://notion.so/workspace/abc123def456...
+    function extractNotionPageId(urlOrId) {
+        const clean = urlOrId.trim();
+        // Al een pure ID (32 hex-tekens, optioneel met koppeltekens)
+        if (/^[0-9a-f-]{32,36}$/i.test(clean)) return clean.replace(/-/g, '');
+        // Haal ID op uit URL: laatste segment voor eventuele query-string
+        const match = clean.match(/([0-9a-f]{32})(?:[?#]|$)/i);
+        return match ? match[1] : null;
+    }
+
+    async function saveNotionCredentials() {
+        const token  = document.getElementById('notionTokenInput').value.trim();
+        const urlVal = document.getElementById('notionPageUrl').value.trim();
+        const status = document.getElementById('notionConnectStatus');
+        const btn    = document.getElementById('notionConnectBtn');
+
+        if (!token.startsWith('secret_') && !token.startsWith('ntn_')) {
+            status.textContent = 'Token lijkt niet te kloppen — hij moet beginnen met "secret_" of "ntn_".';
+            status.className = 'notion-status error'; return;
+        }
+
+        const pageId = extractNotionPageId(urlVal);
+        if (!pageId) {
+            status.textContent = 'Kan geen geldige pagina-ID vinden in de URL. Kopieer de link via de Share-knop in Notion.';
+            status.className = 'notion-status error'; return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Verbinding testen…';
+        status.textContent = ''; status.className = 'notion-status';
+
+        // Test de verbinding via de Netlify-proxy (nooit rechtstreeks vanuit de browser)
+        try {
+            const resp = await fetch('/api/notion-verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notionToken: token, pageId })
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+
+            // Opslaan in localStorage
+            localStorage.setItem('eh-notion', JSON.stringify({
+                token,
+                pageId,
+                parentType: data.type || 'page',
+                label: data.title || 'Mijn Notion'
+            }));
+            updateNotionUI();
+            showToast(`Notion verbonden: ${data.title || 'pagina'} ✓`);
+        } catch (err) {
+            status.textContent = `Fout: ${err.message}`;
+            status.className = 'notion-status error';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Verbind mijn Notion';
+        }
+    }
+
+    function disconnectNotion() {
+        localStorage.removeItem('eh-notion');
+        updateNotionUI();
+        showToast('Notion ontkoppeld');
+    }
+
     function toggleNotion() {
         const body = document.getElementById('notionBody');
         const btn  = document.getElementById('notionToggleBtn');
@@ -1391,22 +1791,34 @@ Gebruik EXACT deze vijf kopjes:
         btn.innerHTML = open
             ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>'
             : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        if (open) updateNotionUI();
     }
 
     async function saveToNotion() {
+        const conn = getNotionConn();
+        if (!conn || !conn.token) {
+            showToast('Verbind eerst je Notion workspace');
+            return;
+        }
         const title  = document.getElementById('notionTitle').value.trim() || sessionGoal || 'Brainstorm notulen';
         const btn    = document.getElementById('notionSaveBtn');
         const status = document.getElementById('notionStatus');
 
-        btn.disabled = true;
-        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="30" stroke-dashoffset="10"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle></svg> Bezig...';
+        btn.disabled = true; btn.textContent = 'Bezig met opslaan…';
         status.textContent = ''; status.className = 'notion-status';
 
         try {
             const resp = await fetch('/api/notion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, goal: sessionGoal, categories: parsedCategories })
+                body: JSON.stringify({
+                    title,
+                    goal:        sessionGoal,
+                    categories:  parsedCategories,
+                    notionToken: conn.token,
+                    parentId:    conn.pageId,
+                    parentType:  conn.parentType
+                })
             });
             const data = await resp.json();
             if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);

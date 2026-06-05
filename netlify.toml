@@ -11,3 +11,9 @@
   from = "/api/notion"
   to = "/.netlify/functions/notion"
   status = 200
+
+[[redirects]]
+  from = "/api/notion-verify"
+  to = "/.netlify/functions/notion-verify"
+  status = 200
+
